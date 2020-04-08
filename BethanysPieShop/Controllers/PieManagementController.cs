@@ -1,6 +1,8 @@
 ﻿using BethanysPieShop.Models;
+using BethanysPieShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +34,7 @@ namespace BethanysPieShop.Controllers
             var categories = _categoryRepository.AllCategories;
             var pieEditViewModel = new PieEditViewModel
             {
-                Categories = categories.Select(c => new SelectListItem() { Text = c.CategoryName, ValueTask = c.CategoryId.ToString() }).ToList(),
+                //Categories = categories.Select(c => new SelectListItem() { Text = c.CategoryName, ValueTask = c.CategoryId.ToString() }).ToList(),
                 CategoryId = categories.FirstOrDefault().CategoryId
             };
             return View(pieEditViewModel);
@@ -44,7 +46,7 @@ namespace BethanysPieShop.Controllers
             //Basic validation
             if (ModelState.IsValid)
             {
-                _pieRepository.CreatePie(pieEditViewModel.Pie);
+               // _pieRepository.CreatePie(pieEditViewModel.Pie);
                 return RedirectToAction("Index");
             }
             return View(pieEditViewModel);
@@ -52,9 +54,9 @@ namespace BethanysPieShop.Controllers
 
         public IActionResult EditPie(int pieId)
         {
-            var categories = _categoryRepository.Categories;
+            var categories = _categoryRepository.AllCategories;
 
-            var pie = _pieRepository.Pies.FirstOrDefault(p => p.PieId == pieId);
+            var pie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == pieId);
 
             var pieEditViewModel = new PieEditViewModel
             {
@@ -76,7 +78,7 @@ namespace BethanysPieShop.Controllers
 
             if (ModelState.IsValid)
             {
-                _pieRepository.UpdatePie(pieEditViewModel.Pie);
+               // _pieRepository.UpdatePie(pieEditViewModel.Pie);
                 return RedirectToAction("Index");
             }
             return View(pieEditViewModel);
