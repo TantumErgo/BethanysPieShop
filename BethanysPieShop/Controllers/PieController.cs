@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using BethanysPieShop.Models;
 using BethanysPieShop.ViewModels;
@@ -14,11 +15,16 @@ namespace BethanysPieShop.Controllers
     {
         private readonly IPieRepository _pieRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IPieReviewRepository _pieReviewRepository;
+        private readonly HtmlEncoder _htmlEncoder;
 
-        public PieController(IPieRepository pieRepository, ICategoryRepository categoryRepository)
+        public PieController(IPieRepository pieRepository, ICategoryRepository categoryRepository,
+            IPieReviewRepository pieReviewRepository, HtmlEncoder htmlEncoder)
         {
             _pieRepository = pieRepository;
             _categoryRepository = categoryRepository;
+            _pieReviewRepository = pieReviewRepository;
+            _htmlEncoder = htmlEncoder;
         }
 
         //public ViewResult List()
@@ -58,8 +64,21 @@ namespace BethanysPieShop.Controllers
         {
             var pie = _pieRepository.GetPieById(id);
             if (pie == null)
+                return NotFound(); 
+            return View(new PieDetailViewModel() { Pie = pie });
+        }
+
+        [HttpPost]
+        public IActionResult Details(int id, string review)
+        {
+            var pie = _pieRepository.GetPieById(id);
+            if (pie == null)
                 return NotFound();
-            return View(pie);
+
+            string encodedReview = _htmlEncoder.Encode(review);
+            _pieReviewRepository.AddPieReview(new PieReview() { Pie = pie, Review = encodedReview });
+
+            return View(new PieDetailViewModel() { Pie = pie });
         }
     }
 }

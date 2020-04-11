@@ -21,6 +21,8 @@ namespace BethanysPieShop.Models
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<PieReview> PieReviews { get; set; }
+        public DbSet<PieGiftOrder> PieGiftOrders { get; set; }
 
         //Note: below line might be unnecessary
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }

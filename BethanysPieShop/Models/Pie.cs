@@ -20,5 +20,7 @@ namespace BethanysPieShop.Models
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public string Notes { get; set; }
+        public List<PieReview> PieReviews { get; set; }
+        //public SugarLevel SugarLevel { get; set; }
     }
 }

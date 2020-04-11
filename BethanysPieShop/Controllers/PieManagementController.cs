@@ -46,7 +46,7 @@ namespace BethanysPieShop.Controllers
             //Basic validation
             if (ModelState.IsValid)
             {
-               // _pieRepository.CreatePie(pieEditViewModel.Pie);
+                _pieRepository.CreatePie(pieEditViewModel.Pie);
                 return RedirectToAction("Index");
             }
             return View(pieEditViewModel);
@@ -72,13 +72,13 @@ namespace BethanysPieShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditPie(PieEditViewModel pieEditViewModel)
+        public IActionResult EditPie([Bind("Pie")] PieEditViewModel pieEditViewModel)
         {
             pieEditViewModel.Pie.CategoryId = pieEditViewModel.CategoryId;
 
             if (ModelState.IsValid)
             {
-               // _pieRepository.UpdatePie(pieEditViewModel.Pie);
+                _pieRepository.UpdatePie(pieEditViewModel.Pie);
                 return RedirectToAction("Index");
             }
             return View(pieEditViewModel);
@@ -88,6 +88,32 @@ namespace BethanysPieShop.Controllers
         public IActionResult DeletePie(string pieId)
         {
             return View();
+        }
+
+        public IActionResult QuickEdit()
+        {
+            var pieNames = _pieRepository.AllPies.Select(p => p.Name).ToList();
+            return View(pieNames);
+        }
+
+        [HttpPost]
+        public IActionResult QuickEdit(List<string> pieNames)
+        {
+            //do awesome things with the pie names here
+            return View();
+        }
+
+        public IActionResult BulkEditPies()
+        {
+            var pieNames = _pieRepository.AllPies.ToList();
+            return View(pieNames);
+        }
+
+        [HttpPost]
+        public IActionResult BulkEditPies(List<Pie> pies)
+        {
+            //do awesome things with the pie here
+            return View(pies);
         }
     }
 }

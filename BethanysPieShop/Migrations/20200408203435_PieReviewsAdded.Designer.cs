@@ -4,14 +4,16 @@ using BethanysPieShop.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BethanysPieShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200408203435_PieReviewsAdded")]
+    partial class PieReviewsAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -424,33 +426,6 @@ namespace BethanysPieShop.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BethanysPieShop.Models.PieGiftOrder", b =>
-                {
-                    b.Property<int>("PieGiftOrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<int?>("PieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PieGiftOrderId");
-
-                    b.HasIndex("PieId");
-
-                    b.ToTable("PieGiftOrders");
-                });
-
             modelBuilder.Entity("BethanysPieShop.Models.PieReview", b =>
                 {
                     b.Property<int>("PieReviewId")
@@ -651,13 +626,6 @@ namespace BethanysPieShop.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BethanysPieShop.Models.PieGiftOrder", b =>
-                {
-                    b.HasOne("BethanysPieShop.Models.Pie", "Pie")
-                        .WithMany()
-                        .HasForeignKey("PieId");
                 });
 
             modelBuilder.Entity("BethanysPieShop.Models.PieReview", b =>
