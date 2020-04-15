@@ -33,7 +33,11 @@ namespace BethanysPieShop
 
             //added options part to function call 4/4/2020
              services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
+
+            //NOTE: not sure if this is necessary
+            //services.AddIdentityCore<IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
             //added additional configuration options 4/4/2020
             services.Configure<IdentityOptions>(options =>
@@ -107,7 +111,9 @@ namespace BethanysPieShop
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+
+        //public void Configure
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -117,10 +123,12 @@ namespace BethanysPieShop
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
+            
 
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            //await CreateRoles(serviceProvider);
 
             app.UseEndpoints(endpoints =>
             {
@@ -130,5 +138,48 @@ namespace BethanysPieShop
                 endpoints.MapRazorPages();
             });
         }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            //initializing custom roles 
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            string[] roleNames = { "Administrator"/*, "Store-Manager", "Member"*/ };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                // ensure that the role does not exist
+                if (!roleExist)
+                {
+                    //create the roles and seed them to the database: 
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            // find the user with the admin email 
+            var _user = await UserManager.FindByEmailAsync("admin@email.com");
+
+            // check if the user exists
+            if (_user == null)
+            {
+                //Here you could create the super admin who will maintain the web app
+                var poweruser = new ApplicationUser
+                {
+                    UserName = "Administrator",
+                    Email = "admin@email.com",
+                };
+                string adminPassword = "AdminPass!01";
+
+                var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
+                if (createPowerUser.Succeeded)
+                {
+                    //here we tie the new user to the role
+                    await UserManager.AddToRoleAsync(poweruser, "Administrator");
+
+                }
+            }
+        }        
     }
 }

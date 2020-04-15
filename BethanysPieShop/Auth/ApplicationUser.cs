@@ -11,5 +11,6 @@ namespace BethanysPieShop.Auth
         public DateTime Birthdate { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+        public List<IdentityUserClaim<string>> Claims { get; set; }
     }
 }

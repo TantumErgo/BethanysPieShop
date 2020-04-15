@@ -217,6 +217,13 @@ namespace BethanysPieShop.Models
                     "https://gillcleerenpluralsight.blob.core.windows.net/files/strawberrycheesecakesmall.jpg",
                 AllergyInformation = ""
             });
+
+            //seed review
+
+            //modelBuilder.Entity<PieReview>.HasData(new PieReview
+            //{
+
+            //});
         }
     }
 }

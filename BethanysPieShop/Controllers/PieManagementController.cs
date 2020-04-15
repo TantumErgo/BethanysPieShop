@@ -34,7 +34,7 @@ namespace BethanysPieShop.Controllers
             var categories = _categoryRepository.AllCategories;
             var pieEditViewModel = new PieEditViewModel
             {
-                //Categories = categories.Select(c => new SelectListItem() { Text = c.CategoryName, ValueTask = c.CategoryId.ToString() }).ToList(),
+                Categories = categories.Select(c => new SelectListItem() { Text = c.CategoryName, Value = c.CategoryId.ToString() }).ToList(),
                 CategoryId = categories.FirstOrDefault().CategoryId
             };
             return View(pieEditViewModel);
@@ -84,6 +84,7 @@ namespace BethanysPieShop.Controllers
             return View(pieEditViewModel);
         }
 
+        //NOTE: doesn't seem to delete anything
         [HttpPost]
         public IActionResult DeletePie(string pieId)
         {

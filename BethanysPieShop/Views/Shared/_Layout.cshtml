@@ -1,5 +1,12 @@
 ﻿@using  Microsoft.AspNetCore.Identity
 @using  BethanysPieShop.Auth
+@using  Microsoft.AspNetCore.Http
+@using  Microsoft.AspNetCore.Identity.EntityFrameworkCore
+@using  Microsoft.AspNetCore.Authorization
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IAuthorizationService AuthorizationService
+@inject UserManager<ApplicationUser> UserManager
 
 <!DOCTYPE html>
 
@@ -33,10 +40,10 @@
                         <li><a asp-controller="Contact" asp-action="Index">Contact</a></li>
                         @await Component.InvokeAsync("ShoppingCartSummary")
                         @* needs fix *@
-                        @*@if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrators"))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrators"))
                         {
                             @await Component.InvokeAsync("AdminMenu")
-                        }*@
+                        }
                         <partial name="_LoginPartial" />
                     </ul>
                 </div>

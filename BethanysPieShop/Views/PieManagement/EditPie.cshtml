@@ -10,7 +10,7 @@
     <div class="form-group">
         <label asp-for="Pie.PieId" class="col-md-2 control-label"></label>
         <div class="col-md-10">
-            <input asp-for="Pie.PieId" class="form-control" />@*readonly="readonly"*@
+            <input asp-for="Pie.PieId" class="form-control" />@* NOTE: uncomment this? readonly="readonly"*@
             <span asp-validation-for="Pie.PieId" class="text-danger"></span>
         </div>
     </div>
@@ -79,7 +79,8 @@
         </div>
     </div>
 
-    @*<div class="form-group">
+    @* NOTE: test sugar level to see if it works now
+        <div class="form-group">
         <label asp-for="Pie.SugarLevel" class="col-md-2 control-label"></label>
         <div class="col-md-10">
             <select asp-for="Pie.SugarLevel" class="form-control"
