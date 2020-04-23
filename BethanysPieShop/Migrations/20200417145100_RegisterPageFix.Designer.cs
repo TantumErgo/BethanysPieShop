@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BethanysPieShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200416005403_AttemptToFixAuth")]
-    partial class AttemptToFixAuth
+    [Migration("20200417145100_RegisterPageFix")]
+    partial class RegisterPageFix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -2,7 +2,7 @@
 
 namespace BethanysPieShop.Migrations
 {
-    public partial class TestDBFix : Migration
+    public partial class RegisterPageFix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

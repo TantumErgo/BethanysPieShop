@@ -2,7 +2,7 @@
 
 namespace BethanysPieShop.Migrations
 {
-    public partial class ApplicationUserUpdate : Migration
+    public partial class AdminUserToDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

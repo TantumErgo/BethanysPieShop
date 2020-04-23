@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BethanysPieShop.Auth;
 using BethanysPieShop.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -40,8 +41,12 @@ namespace BethanysPieShop
                 options.User.RequireUniqueEmail = true;
             })
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddDefaultUI()
+            .AddEntityFrameworkStores<AppDbContext>();
+            
+            
+            
 
             //added options part to function call 4/4/2020
             //services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -98,6 +103,8 @@ namespace BethanysPieShop
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IPieReviewRepository, PieReviewRepository>();
             services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
+            services.AddScoped<IAuthorizationHandler, MinimumOrderAgeAppUserRequirementHandler>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             services.AddHttpContextAccessor();
             services.AddSession();
 
@@ -113,7 +120,7 @@ namespace BethanysPieShop
             //Claims-based
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdministratorOnly", policy => policy.RequireRole("Administrator"));
+                options.AddPolicy("AdministratorOnly", policy => policy.RequireRole("Administrators"));
                 options.AddPolicy("DeletePie", policy => policy.RequireClaim("Delete Pie", "Delete Pie"));
                 options.AddPolicy("AddPie", policy => policy.RequireClaim("Add Pie", "Add Pie"));
                 options.AddPolicy("MinimumOrderAge", policy => policy.Requirements.Add(new MinimumOrderAgeRequirement(18)));
@@ -151,47 +158,49 @@ namespace BethanysPieShop
             });
         }
 
-        private async Task CreateRoles(IServiceProvider serviceProvider)
-        {
-            //initializing custom roles 
-            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roleNames = { "Administrator"/*, "Store-Manager", "Member"*/ };
-            IdentityResult roleResult;
+        //private async Task CreateRoles(IServiceProvider serviceProvider)
+        //{
+        //    //initializing custom roles 
+        //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        //    string[] roleNames = { "Administrator"/*, "Store-Manager", "Member"*/ };
+        //    IdentityResult roleResult;
 
-            foreach (var roleName in roleNames)
-            {
-                var roleExist = await RoleManager.RoleExistsAsync(roleName);
-                // ensure that the role does not exist
-                if (!roleExist)
-                {
-                    //create the roles and seed them to the database: 
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-                }
-            }
+        //    foreach (var roleName in roleNames)
+        //    {
+        //        var roleExist = await RoleManager.RoleExistsAsync(roleName);
+        //        // ensure that the role does not exist
+        //        if (!roleExist)
+        //        {
+        //            //create the roles and seed them to the database: 
+        //            roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+        //        }
+        //    }
 
-            // find the user with the admin email 
-            var _user = await UserManager.FindByEmailAsync("admin@email.com");
+        //    // find the user with the admin email 
+        //    var _user = await UserManager.FindByEmailAsync("admin@email.com");
 
-            // check if the user exists
-            if (_user == null)
-            {
-                //Here you could create the super admin who will maintain the web app
-                var poweruser = new ApplicationUser
-                {
-                    UserName = "Administrator",
-                    Email = "admin@email.com",
-                };
-                string adminPassword = "AdminPass!01";
+        //    // check if the user exists
+        //    if (_user == null)
+        //    {
+        //        //Here you could create the super admin who will maintain the web app
+        //        var poweruser = new ApplicationUser
+        //        {
+        //            UserName = "Administrator",
+        //            Email = "admin@email.com",
+        //        };
+        //        string adminPassword = "AdminPass!01";
 
-                var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
-                if (createPowerUser.Succeeded)
-                {
-                    //here we tie the new user to the role
-                    await UserManager.AddToRoleAsync(poweruser, "Administrator");
+        //        var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
+        //        if (createPowerUser.Succeeded)
+        //        {
+        //            //here we tie the new user to the role
+        //            await UserManager.AddToRoleAsync(poweruser, "Administrator");
 
-                }
-            }
-        }        
+        //        }
+        //    }
+        //}        
+
+        
     }
 }
