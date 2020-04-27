@@ -338,6 +338,6 @@ namespace BethanysPieShop.Controllers
             ModelState.AddModelError("", "User not updated, something went wrong.");
 
             return View(claimsManagementViewModel);
-        }
-    }
+        }        
+    }    
 }
