@@ -77,7 +77,18 @@ namespace BethanysPieShop.Controllers
                 return RedirectToAction("UserManagement", _userManager.Users);
 
             var claims = await _userManager.GetClaimsAsync(user);
-            var vm = new EditUserViewModel() { Id = user.Id, Email = user.Email, UserName = user.UserName, Birthdate = user.Birthdate, City = user.City, Country = user.Country, UserClaims = claims.Select(c => c.Value).ToList() };
+
+            var vm = new EditUserViewModel()
+            {
+                Id = user.Id,
+                UserClaims = claims.Select(c => c.Value).ToList(),
+                Email = user.Email,
+                UserName = user.UserName,
+                Birthdate = user.Birthdate,
+                City = user.City,                
+                Country = user.Country
+                
+            };
 
             return View(vm);
         }
@@ -321,7 +332,7 @@ namespace BethanysPieShop.Controllers
         [HttpPost]
         public async Task<IActionResult> ManageClaimsForUser(ClaimsManagementViewModel claimsManagementViewModel)
         {
-            var user = await _userManager.FindByIdAsync(claimsManagementViewModel.UserId);
+            ApplicationUser user = await _userManager.FindByIdAsync(claimsManagementViewModel.UserId);
 
             if (user == null)
                 return RedirectToAction("UserManagement", _userManager.Users);

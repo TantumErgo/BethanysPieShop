@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BethanysPieShop.Auth;
 using BethanysPieShop.Models;
-using BethanysPieShop.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
